@@ -15,8 +15,11 @@ discovery.zen.minimum_master_nodes: 1
 #
 discovery.type: single-node
 
+http.cors.enabled: true
+http.cors.allow-origin: /https?:\/\/localhost(:[0-9]+)?/
+
 # xpack.security.authc:
 #   anonymous:
-#     username: anonymous_user 
-#     roles: superuser, kibana_user 
-#     authz_exception: true 
+#     username: anonymous_user
+#     roles: superuser, kibana_user
+#     authz_exception: true
