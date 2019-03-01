@@ -1,0 +1,21 @@
+{
+  "mappings" : {
+    "movie" : {
+      "dynamic": "strict",
+      "properties" : {
+        "cast" : {
+          "type" : "text"
+        },
+        "genres" : {
+          "type" : "keyword"
+        },
+        "title" : {
+          "type" : "text"
+        },
+        "year" : {
+          "type" : "long"
+        }
+      }
+    }
+  }
+}
