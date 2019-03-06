@@ -44,6 +44,7 @@ class App extends Component {
               item.options[0].text
             ));
             this.setState({ suggestions });
+            this.setState({ items: [] });
           } else {
             this.setState({ suggestions: [] });
             this.setState({ items });
