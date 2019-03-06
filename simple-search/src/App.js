@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import SearchResults from './SearchResults.js';
+import SearchResults from './SearchResults';
+import Suggestions from './Suggestions';
 
 import axios from 'axios';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: '', items: [] };
+    this.state = { text: '', items: [], suggestions: [] };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -19,14 +19,36 @@ class App extends Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    axios.get(`http://localhost:9200/movies/_search?q=title:${this.state.text}`)
-      .then(
-          (res) => {
-            const items = res.data.hits.hits.map(item => (
-              item._source
+    axios.post('http://localhost:9200/movies/_search', {
+      "query": {
+        "match": {
+          "title": this.state.text
+        }
+      },
+      "suggest": {
+        "suggestions": {
+          "text": this.state.text,
+          "term": {
+            "field": "title"
+          }
+        }
+      }
+    })
+    .then(
+        (res) => {
+          const items = res.data.hits.hits.map(item => (
+            item._source
+          ));
+          if (items.length < 1) {
+            const suggestions = res.data.suggest.suggestions.map(item => (
+              item.options[0].text
             ));
+            this.setState({ suggestions });
+          } else {
+            this.setState({ suggestions: [] });
             this.setState({ items });
-          });
+          }
+        });
   }
 
   render() {
@@ -49,6 +71,7 @@ class App extends Component {
             Search
           </button>
         </form>
+        <Suggestions items={this.state.suggestions} />
         <SearchResults items={this.state.items} />
       </div>
     );
